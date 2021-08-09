@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!--Originally written by Rain Holloway in Feb 2019-->
+    <!--with case INSENSITIVE find-->
+    <!--Modified by Nev Goodyer-->
+    <title>Array of records in JS</title>
+    <link rel="icon" href="images/icon_SCC.png"> <!--adds an icon to browser tab-->
+    <script type='text/javascript'> 
+        var firstName_text;
+        var lastName_text;
+        var dob_date = new Date();
+        var gender_text;
+        var avgMark_int = 0;
+        var query_text;
+        var studentList_text;
+        var numStudent = 0;
+        var student = [];
+        var clearList = false;
+
+        onload = function () {
+            firstName_text = document.getElementById("txtFirstN");
+            lastName_text = document.getElementById("txtLastN");
+            dob_date = document.getElementById("txtDOB");
+            //gender_text = document.querySelector('input[name="radGender"]:checked').value;
+            gender_text = document.getElementById("txtGender");
+            //if (document.getElementById("radM").checked) {
+            //    gender_text = document.getElementById("radM").value;
+            //} else if (document.getElementById("radF").checked) {
+            //    gender_text = document.getElementById("radF").value;
+            //}         
+            avgMark_int = document.getElementById("txtAvgMk");
+            query_text = document.getElementById("txtFind");
+            studentList_text = document.getElementById("txtStList");
+        }
+
+        class Student {
+            constructor(fName, lName, dob, gender, avgMark, num) {
+                this.firstName = fName;
+                this.lastName = lName;
+                this.dob = dob;
+                this.gender = gender;
+                this.avgMark = avgMark;
+                this.num = num;
+            }
+        }
+
+        function addStudent() {
+
+            if (clearList) {
+                printStudents();
+                clearList = false;
+            }
+
+            numStudent++;
+            student.push(new Student());
+            student[numStudent - 1].firstName = firstName_text.value.trim();
+            student[numStudent - 1].lastName = lastName_text.value.toUpperCase().trim();
+            student[numStudent - 1].dob = dob_date.value.trim();
+            student[numStudent - 1].gender = gender_text.value.trim();
+            student[numStudent - 1].avgMark = avgMark_int.value.trim();
+            student[numStudent - 1].num = numStudent;
+
+            studentList_text.value += `${numStudent}: F ${student[numStudent - 1].firstName}, L ${student[numStudent - 1].lastName}, DOB `;
+            studentList_text.value += `${student[numStudent - 1].dob}, G ${student[numStudent - 1].gender}, Mk `;
+            studentList_text.value += `${student[numStudent - 1].avgMark}`;
+            studentList_text.value += "\n";
+
+            firstName_text.value = "";
+            lastName_text.value = "";
+            dob_date.value = "";
+            gender_text.value = "";
+            avgMark_int.value = "";
+        }
+        function findStudent() {
+            let query = query_text.value.toUpperCase().trim();
+            let foundStudent;
+            let found = false;
+            for (let i = 0; i < student.length; i++) {
+                if (query == student[i].lastName) {
+                    foundStudent = student[i];
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                studentList_text.value = `${foundStudent.num}: ${foundStudent.firstName} ${foundStudent.lastName} ${foundStudent.dob} ${foundStudent.gender} ${foundStudent.avgMark}`;
+            } else {
+                studentList_text.value = `No student found with last-name: ${query}`
+            }
+            query_text.value = "";
+            clearList = true;
+        }
+        function printStudents() {
+            studentList_text.value = "";
+            for (let i = 0; i < student.length; i++) {
+                studentList_text.value += `${student[i].num}: ${student[i].firstName} ${student[i].lastName} ${student[i].dob} ${student[i].gender} ${student[i].avgMark}`;
+                studentList_text.value += "\n";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Student Array of Records</h1>
+    <h3>Enter student details</h3>
+    First Name                        
+    <textarea id="txtFirstN" rows="1" cols="10"></textarea>&nbsp;&nbsp;
+    Last Name                          
+    <textarea id="txtLastN" rows="1" cols="10"></textarea>&nbsp;&nbsp;
+    DOB                       
+    <textarea id="txtDOB" rows="1" cols="10"></textarea>
+    <br />
+    M/F                       
+    <textarea id="txtGender" rows="1" cols="3"></textarea>&nbsp;&nbsp;
+    Av Mk                       
+    <textarea id="txtAvgMk" rows="1" cols="3"></textarea>&nbsp;&nbsp;
+        Male<input id="radM" type="radio" name="radGender" value="M" checked="checked" />
+    Female<input id="radF" type="radio" name="radGender" value="F" /><br />
+    <h3>Check the student&#39;s subjects</h3>
+    -English-<input id="chkEng" type="checkbox" value="Eng" />&nbsp;&nbsp;
+    - Maths -<input id="chkMat" type="checkbox" value="Maths" />&nbsp;&nbsp;
+    -  IPT  -<input id="chkIPT" type="checkbox" value="IPT" />&nbsp;&nbsp;
+    -  SDD  -<input id="chkSDD" type="checkbox" value="SDD" />
+    <br />
+    <br />
+    <button class="btn" type="button" onclick="addStudent()">Add Student</button>
+    <br />
+    <h3>List of Students</h3>
+    <textarea id="txtStList" rows="10" cols="80"></textarea>
+    <br />
+    <br />
+    Find Student via Surname
+    <textarea id="txtFind" cols="20" rows="1"></textarea>
+    <button class="btn" type="button" onclick="findStudent()">Find Student</button>
+    &nbsp;&nbsp;
+    <button class="btn" type="button" onclick="printStudents()">View Full List</button>
+</body>
+</html>
